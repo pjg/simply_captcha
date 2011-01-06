@@ -1,0 +1,62 @@
+SimplyCaptcha
+=============
+
+SimplyCaptcha is a Rails plugin providing a very simple (yet quite effective) captcha mechanism.
+
+It works like this: you add one field to the form you'd like to be autobot-protected. The captcha requires the user to resolve a simple mathematical equation (like this: 11 + 1 = ?). Upon loading the page, captcha is automatically resolved (filled in) by the javascript and hidden from the user, so we don't bother him with this at all.
+
+And if he has javascript disabled he can just fill in the correct value.
+
+Autobots basically don't have a javascript parser/compiler so this mechanism works as it should.
+
+Of course, the captcha algorithm itself is very trivial. Any ten year old could solve it. The point is that it's custom and as such requires just a little bit of effort. One line of code? Maybe two? It's still some effort that makes this plugin effective. But it's completely unusable on sites with just a little bit more traffic.
+
+So, please, DO NOT USE it. Write your own solution based on this plugin. It's really simple.
+
+
+Requirements
+============
+
+Rails version 2.3.*
+jQuery version 1.4+
+
+
+Installation
+============
+
+git submodule add git://github.com/pjg/simply_captcha.git vendor/plugins/simply_captcha
+cp vendor/plugins/simply_captcha/js/simply_captcha.js public/javascripts/
+git add public/javascripts/simply_captcha.js
+git commit -m "Add simply_captcha plugin as a submodule"
+
+application.html
+  <%= javascript_include_tag 'simply_captcha' %>
+
+some_view.html.erb
+  <%= captcha_verification %>
+
+some_controller.rb
+  def some_action_to_be_protected_before_autobots
+    # call captcha to add to the errors
+    verify_captcha(@reservation, params[:captcha_number], params[:captcha_result])
+
+    if @reservation.errors.empty?
+      # captcha filled in correctly
+      ...
+
+
+optionally add this CSS rule (needed when you have different vertical-align assigned to labels, for example):
+  #captcha p * {
+      vertical-align: baseline;
+  }
+
+
+Usage
+=====
+
+verify_captcha is a captcha verification method that can be used in two ways. One has been presented above. We just call the method in the controller and it will add an error to the model passed in as a parameter. We can then check for errors on the model to see if captcha has been resolved correctly. And display the appropriate error message to the user (among other error messages) if not.
+
+The other is to use it directly in the 'if' statement to check the captcha correctness (the method will return true for correctly resolved captcha).
+
+
+Copyright (c) 2011 Paweł Gościcki, released under the MIT license

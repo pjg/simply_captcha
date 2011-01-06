@@ -1,0 +1,7 @@
+<% content_tag :div, :id => 'captcha' do %>
+<%=  hidden_field_tag :captcha_number, @captcha_number %>
+<%   content_tag :p do %>
+<%=    label_tag :captcha_result, I18n.locale == 'en' ? 'Please calculate' : 'Podaj wynik działania', :class => 'required' %>:
+<%=    content_tag :span, @captcha_number.to_s, :class => 'captcha_number' %> + <%= content_tag :span, '1' %> = <%= text_field_tag :captcha_result, params[:captcha_result], :class => 'captcha_result number tiny' %>
+<%   end %>
+<% end %>
